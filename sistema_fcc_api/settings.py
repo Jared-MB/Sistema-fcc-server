@@ -92,12 +92,20 @@ WSGI_APPLICATION = 'sistema_fcc_api.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': os.path.join(BASE_DIR, "my.cnf"),
-            'charset': 'utf8mb4',
-        }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'OPTIONS': {
+    #         'read_default_file': os.path.join(BASE_DIR, "my.cnf"),
+    #         'charset': 'utf8mb4',
+    #     }
+    # }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "sistema-fcc-db-api",
+        "USER": "postgres",
+        "PASSWORD": "mubAnja0922",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 

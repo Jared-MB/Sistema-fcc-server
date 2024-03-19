@@ -18,12 +18,18 @@ from django.urls import path
 from sistema_fcc_api.views import bootstrap
 from sistema_fcc_api.views import users
 from sistema_fcc_api.views import auth
+from sistema_fcc_api.views import alumnos
+from sistema_fcc_api.views import maestros
 
 urlpatterns = [
     #Version
         path('bootstrap/version', bootstrap.VersionView.as_view()),
     #Create Admin
         path('admin/', users.AdminView.as_view()),
+    #Create Student
+        path('student/', alumnos.StudentView.as_view()),
+    #Create Teacher
+        path('teacher/', maestros.TeacherView.as_view()),
     #Login
         path('token/', auth.CustomAuthToken.as_view()),
     #Logout
