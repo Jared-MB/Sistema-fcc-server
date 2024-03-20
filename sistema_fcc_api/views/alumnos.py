@@ -30,68 +30,48 @@ import string
 import random
 import json
 
-class AlumnosAll(generics.CreateAPIView):
+class StudentsAll(generics.CreateAPIView):
+    #Esta linea se usa para pedir el token de autenticación de inicio de sesión
     permission_classes = (permissions.IsAuthenticated,)
     def get(self, request, *args, **kwargs):
-        alumnos = Alumnos.objects.filter(user__is_active = 1).order_by("id")
-        lista = AlumnoSerializer(alumnos, many=True).data
-        
+        students = Alumnos.objects.filter(user__is_active = 1).order_by("id")
+        lista = AlumnoSerializer(students, many=True).data
+
         return Response(lista, 200)
 
-class AlumnosView(generics.CreateAPIView):
-    #Obtener usuario por ID
-    # permission_classes = (permissions.IsAuthenticated,)
+class StudentView(generics.CreateAPIView):
     def get(self, request, *args, **kwargs):
-        alumno = get_object_or_404(Alumnos, id = request.GET.get("id"))
-        alumno = AlumnoSerializer(alumno, many=False).data
+        student = get_object_or_404(Alumnos, id = request.GET.get("id"))
+        student = AlumnoSerializer(student, many=False).data
 
-        return Response(alumno, 200)
-    
-    #Registrar nuevo usuario
+        return Response(student, 200)
+
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-
         user = UserSerializer(data=request.data)
+        print(user.is_valid())
         if user.is_valid():
-            #Grab user data
-            role = request.data['rol']
             first_name = request.data['first_name']
             last_name = request.data['last_name']
             email = request.data['email']
             password = request.data['password']
-            #Valida si existe el usuario o bien el email registrado
-            existing_user = User.objects.filter(email=email).first()
 
+            existing_user = User.objects.filter(username=email).first()
             if existing_user:
                 return Response({"message":"Username "+email+", is already taken"},400)
-
-            user = User.objects.create( username = email,
-                                        email = email,
-                                        first_name = first_name,
-                                        last_name = last_name,
-                                        is_active = 1)
-
-
-            user.save()
+            
+            user = User.objects.create_user(username=email, email=email, first_name=first_name, last_name=last_name, is_active=1)
             user.set_password(password)
             user.save()
 
-            group, created = Group.objects.get_or_create(name=role)
-            group.user_set.add(user)
-            user.save()
-
-            #Create a profile for the user
-            alumno = Alumnos.objects.create(user=user,
-                                            matricula= request.data["matricula"],
-                                            curp= request.data["curp"].upper(),
-                                            rfc= request.data["rfc"].upper(),
-                                            fecha_nacimiento= request.data["fecha_nacimiento"],
-                                            edad= request.data["edad"],
-                                            telefono= request.data["telefono"],
-                                            ocupacion= request.data["ocupacion"])
-            alumno.save()
-
-            return Response({"alumno_created_id": alumno.id }, 201)
-
+            student = Alumnos.objects.create(user=user,
+                                                telefono = request.data['telefono'],
+                                                fecha_nacimiento = request.data['fecha_nacimiento'],
+                                                curp = request.data['curp'],
+                                                rfc = request.data['rfc'],
+                                                edad = request.data['edad'],
+                                                ocupacion = request.data['ocupacion']
+                                            )
+            student.save()
+            return Response({"student_created_id": student.id }, 201)
         return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
-    

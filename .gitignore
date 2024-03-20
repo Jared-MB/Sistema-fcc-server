@@ -56,3 +56,5 @@ sistema_fcc_api/migrations
 
 # Upload data
 /uploadData
+
+venv
