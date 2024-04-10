@@ -70,7 +70,8 @@ class StudentView(generics.CreateAPIView):
                                                 curp = request.data['curp'],
                                                 rfc = request.data['rfc'],
                                                 edad = request.data['edad'],
-                                                ocupacion = request.data['ocupacion']
+                                                ocupacion = request.data['ocupacion'],
+                                                matricula = request.data['matricula']
                                             )
             student.save()
             return Response({"student_created_id": student.id }, 201)

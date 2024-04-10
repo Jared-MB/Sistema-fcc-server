@@ -69,7 +69,10 @@ class TeacherView(generics.CreateAPIView):
                                                 fecha_nacimiento = request.data['fecha_nacimiento'],
                                                 cubiculo = request.data['cubiculo'],
                                                 area_investigacion = request.data['area_investigacion'],
-                                                materias = request.data['materias_json']
+                                                materias = request.data['materias_json'],
+                                                rfc = request.data['rfc'],
+                                                edad = request.data['edad'],
+                                                telefono = request.data['telefono']
                                             )
             teacher.save()
             return Response({"teacher_created_id": teacher.id }, 201)

@@ -33,6 +33,7 @@ class Alumnos(models.Model):
     rfc = models.CharField(max_length=255,null=True, blank=True)
     edad = models.IntegerField(null=True, blank=True)
     ocupacion = models.CharField(max_length=255,null=True, blank=True)
+    matricula = models.CharField(max_length=255,null=True, blank=True)
     creation = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     update = models.DateTimeField(null=True, blank=True)
 
