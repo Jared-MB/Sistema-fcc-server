@@ -65,11 +65,11 @@ class TeacherView(generics.CreateAPIView):
             user.save()
 
             teacher = Profesores.objects.create(user=user,
-                                                clave_profesor = request.data['id_trabajador'],
+                                                clave_profesor = request.data['clave_profesor'],
                                                 fecha_nacimiento = request.data['fecha_nacimiento'],
                                                 cubiculo = request.data['cubiculo'],
                                                 area_investigacion = request.data['area_investigacion'],
-                                                materias = request.data['materias_json'],
+                                                materias = request.data['materias'],
                                                 rfc = request.data['rfc'],
                                                 edad = request.data['edad'],
                                                 telefono = request.data['telefono']
@@ -77,30 +77,33 @@ class TeacherView(generics.CreateAPIView):
             teacher.save()
             return Response({"teacher_created_id": teacher.id }, 201)
         return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 #Se tiene que modificar la parte de edicion y eliminar
 class MaestrosViewEdit(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     def put(self, request, *args, **kwargs):
         # iduser=request.data["id"]
-        maestro = get_object_or_404(Maestros, id=request.data["id"])
-        maestro.id_trabajador = request.data["id_trabajador"]
+        print(request.data)
+        maestro = get_object_or_404(Profesores, id=request.data["id"])
+        maestro.clave_profesor = request.data["clave_profesor"]
         maestro.fecha_nacimiento = request.data["fecha_nacimiento"]
         maestro.telefono = request.data["telefono"]
         maestro.rfc = request.data["rfc"]
         maestro.cubiculo = request.data["cubiculo"]
         maestro.area_investigacion = request.data["area_investigacion"]
-        maestro.materias_json = json.dumps(request.data["materias_json"])
+        maestro.materias = request.data["materias"]
+        maestro.edad = request.data["edad"]
         maestro.save()
         temp = maestro.user
         temp.first_name = request.data["first_name"]
         temp.last_name = request.data["last_name"]
         temp.save()
-        user = MaestroSerializer(maestro, many=False).data
+        user = ProfesorSerializer(maestro, many=False).data
 
         return Response(user,200)
     
     def delete(self, request, *args, **kwargs):
-        maestro = get_object_or_404(Maestros, id=request.GET.get("id"))
+        maestro = get_object_or_404(Profesores, id=request.GET.get("id"))
         try:
             maestro.user.delete()
             return Response({"details":"Maestro eliminado"},200)
