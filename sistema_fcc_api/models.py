@@ -9,7 +9,6 @@ from django.contrib.postgres.fields import ArrayField
 class BearerTokenAuthentication(TokenAuthentication):
     keyword = u"Bearer"
 
-
 class Administradores(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, default=None)
