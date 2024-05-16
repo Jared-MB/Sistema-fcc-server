@@ -39,6 +39,16 @@ class Alumnos(models.Model):
     def __str__(self):
         return "Perfil del alumno "+self.first_name+" "+self.last_name
 
+class Materias(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    nrc = models.IntegerField(null=True, blank=True)
+    nombre = models.CharField(max_length=255,null=True, blank=True)
+    seccion = models.IntegerField(null=True, blank=True)
+    horario = ArrayField(models.CharField(max_length=255,null=True, blank=True))
+    programa_educativo = models.CharField(max_length=255,null=True, blank=True)
+    dias = ArrayField(models.CharField(max_length=255), blank=True)
+    salon = models.CharField(max_length=255,null=True, blank=True)
+
 class Profesores(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, default=None)

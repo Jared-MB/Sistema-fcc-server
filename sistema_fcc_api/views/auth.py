@@ -43,6 +43,7 @@ class CustomAuthToken(ObtainAuthToken):
             for role in roles:
                 role_names.append(role.name)
             #Si solo es un rol especifico asignamos el elemento 0
+            print(roles)
             role_names = role_names[0]
 
             token, created = Token.objects.get_or_create(user=user)
@@ -54,8 +55,8 @@ class CustomAuthToken(ObtainAuthToken):
                 alumno["rol"] = "alumno"
                 return Response(alumno,200)
             if role_names == 'maestro':
-                maestro = Maestros.objects.filter(user=user).first()
-                maestro = MaestroSerializer(maestro).data
+                maestro = Profesores.objects.filter(user=user).first()
+                maestro = ProfesorSerializer(maestro).data
                 maestro["token"] = token.key
                 maestro["rol"] = "maestro"
                 return Response(maestro,200)

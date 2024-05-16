@@ -50,6 +50,7 @@ class TeacherView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         user = UserSerializer(data=request.data)
         if user.is_valid():
+            role = 'maestro'
             first_name = request.data['first_name']
             last_name = request.data['last_name']
             email = request.data['email']
@@ -62,6 +63,10 @@ class TeacherView(generics.CreateAPIView):
             
             user = User.objects.create_user(username=email, email=email, first_name=first_name, last_name=last_name, is_active=1)
             user.set_password(password)
+            user.save()
+
+            group, created = Group.objects.get_or_create(name=role)
+            group.user_set.add(user)
             user.save()
 
             teacher = Profesores.objects.create(user=user,

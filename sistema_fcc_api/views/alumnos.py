@@ -51,6 +51,7 @@ class StudentView(generics.CreateAPIView):
         user = UserSerializer(data=request.data)
         print(user.is_valid())
         if user.is_valid():
+            role = 'alumno'
             first_name = request.data['first_name']
             last_name = request.data['last_name']
             email = request.data['email']
@@ -62,6 +63,10 @@ class StudentView(generics.CreateAPIView):
             
             user = User.objects.create_user(username=email, email=email, first_name=first_name, last_name=last_name, is_active=1)
             user.set_password(password)
+            user.save()
+
+            group, created = Group.objects.get_or_create(name=role)
+            group.user_set.add(user)
             user.save()
 
             student = Alumnos.objects.create(user=user,
